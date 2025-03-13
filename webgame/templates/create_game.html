@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Создать игру</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="game_id">ID игры</label>
+            <input type="number" class="form-control" id="game_id" name="game_id" required>
+        </div>
+        <div class="form-group">
+            <label for="game_name">Название игры</label>
+            <input type="text" class="form-control" id="game_name" name="game_name" required>
+        </div>
+        <div class="form-group">
+            <label for="game_genre">Жанр игры</label>
+            <input type="text" class="form-control" id="game_genre" name="game_genre" required>
+        </div>
+        <div class="form-group">
+            <label for="game_descr">Описание игры</label>
+            <textarea class="form-control" id="game_descr" name="game_descr" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="game_image">Изображение игры</label>
+            <input type="file" class="form-control" id="game_image" name="game_image" accept="image/*">
+        </div>
+        <button type="submit" class="btn btn-primary">Создать</button>
+        <a href="{{ url_for('games') }}" class="btn btn-secondary">Назад</a>
+    </form>
+</div>
+{% endblock %}

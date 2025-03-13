@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Редактировать игру</h1>
+    <form method="POST">
+        <div class="form-group">
+            <label for="game_name">Название игры</label>
+            <input type="text" class="form-control" id="game_name" name="game_name" value="{{ game[1] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="game_genre">Жанр игры</label>
+            <input type="text" class="form-control" id="game_genre" name="game_genre" value="{{ game[2] }}" required>
+        </div>
+        <div class="form-group">
+            <label for="game_descr">Описание игры</label>
+            <textarea class="form-control" id="game_descr" name="game_descr" rows="3" required>{{ game[3] }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+        <a href="{{ url_for('view_game', game_id=game[0]) }}" class="btn btn-secondary">Назад</a>
+    </form>
+</div>
+{% endblock %}
