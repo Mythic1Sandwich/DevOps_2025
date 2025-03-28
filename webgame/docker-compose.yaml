@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app
+    environment:
+      - DATABASE_URL=sqlite:///app/database.db
+    command: flask run --host=0.0.0.0
+
+volumes:
+  db_data:

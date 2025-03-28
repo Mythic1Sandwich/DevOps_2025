@@ -1,0 +1,14 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - docker build -t barsik01/my-web:latest .
+
+deploy:
+  stage: deploy
+  script:
+    - docker push barsik01/my-web:latest
+
