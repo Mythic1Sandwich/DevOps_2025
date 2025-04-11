@@ -120,6 +120,45 @@ def users():
     }
     return render_template('users.html', user=user_info)
 
+@app.route('/change_password', methods=['GET', 'POST'])
+@login_required
+def change_password():
+    if request.method == 'POST':
+       
+        current_password = request.form.get('current_password', '')
+        new_password = request.form.get('new_password', '')
+        confirm_password = request.form.get('confirm_password', '')
+
+     
+        if new_password != confirm_password:
+            flash("Новый пароль и подтверждение пароля не совпадают!", category="danger")
+            return redirect(url_for('change_password'))
+
+        db = get_db()
+        cursor = db.cursor()
+        query = "SELECT password FROM users WHERE user_id = ?"
+        cursor.execute(query, (current_user.id,))
+        user_record = cursor.fetchone()
+        if not user_record:
+            flash("Пользователь не найден!", category="danger")
+            cursor.close()
+            return redirect(url_for('users'))
+        
+        if current_password != user_record['password']:
+            flash("Текущий пароль введён неверно!", category="danger")
+            cursor.close()
+            return redirect(url_for('change_password'))
+
+        update_query = "UPDATE users SET password = ? WHERE user_id = ?"
+        cursor.execute(update_query, (new_password, current_user.id))
+        db.commit()
+        cursor.close()
+
+        flash("Пароль успешно изменён!", category="success")
+        return redirect(url_for('users'))
+
+    return render_template('change_password.html')
+
 
 @app.route('/create_game', methods=["GET", "POST"])
 @login_required 
