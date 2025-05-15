@@ -6,9 +6,11 @@ build:
   stage: build
   script:
     - docker build -t barsik01/my-web:latest .
+    - docker login -u barsik01 -p Zilant97!
+    - docker push barsik01/my-web:latest
 
 deploy:
   stage: deploy
   script:
-    - docker push barsik01/my-web:latest
+    - docker run -d -p 80:80 barsik01/my-web:latest
 
