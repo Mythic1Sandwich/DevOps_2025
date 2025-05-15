@@ -1,5 +1,5 @@
 import pytest
-from app import app
+from webgame.app import app
 
 @pytest.fixture
 def client():
