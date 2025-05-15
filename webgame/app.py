@@ -7,7 +7,8 @@ app = Flask(__name__)
 application = app
 
 app.config['SECRET_KEY'] = '6342eb430febed6def4d4063a2fa717907fb4911143de1891c59dca9e0519bd8'
-app.config['DATABASE'] = r'gamemerch.db'
+
+app.config['DATABASE'] = r'var/jenkins_home/workspace/tests/webgame/gamemerch.db'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
