@@ -1,10 +1,34 @@
 import pytest
 from webgame.app import app
-
+import sqlite3
 @pytest.fixture
 def client():
     with app.test_client() as client:
         yield client
+
+@pytest.fixture(scope='session', autouse=True)
+def setup_test_db():
+    with app.app_context():
+        conn = sqlite3.connect('test_gamemerch.db')
+        cursor = conn.cursor()
+        # Выполните скрипт создания таблиц
+        cursor.executescript('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            login TEXT NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS games (
+            game_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            game_name TEXT NOT NULL,
+            game_genre TEXT,
+            game_descr TEXT
+        );
+        ''')
+        conn.commit()
+        conn.close()
+
 # 1
 def test_auth_success(client):
     response = client.post('/auth', data={
