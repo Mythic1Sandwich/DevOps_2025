@@ -1,32 +1,10 @@
 import pytest
-import os
-import sqlite3
-from webgame.app import app, init_db
+from webgame.app import app
 
 @pytest.fixture
 def client():
-    TEST_DB_PATH = '/tmp/test_gamemerch.db'
-    if os.path.exists(TEST_DB_PATH):
-        os.unlink(TEST_DB_PATH)
-    
-    app.config['DATABASE_URI'] = f'sqlite:///{TEST_DB_PATH}'
-    app.config['TESTING'] = True
-    
-    with app.app_context():
-        init_db()
-        conn = sqlite3.connect(TEST_DB_PATH)
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO users (login, password, is_admin) VALUES (?, ?, ?)", 
-                      ('admin', 'admin123', 1))
-        conn.commit()
-        conn.close()
-
     with app.test_client() as client:
         yield client
-    
-    if os.path.exists(TEST_DB_PATH):
-        os.unlink(TEST_DB_PATH)
-
 # 1
 def test_auth_success(client):
     response = client.post('/auth', data={
