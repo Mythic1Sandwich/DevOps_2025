@@ -103,7 +103,7 @@ def games():
 
     total_pages = (total_games + per_page - 1) // per_page
 
-games_list = [{'game_id': game[0], 'game_name': game[1], 'game_genre': game[2], 'game_descr': game[3]} for game in games_data]
+    games_list = [{'game_id': game[0], 'game_name': game[1], 'game_genre': game[2], 'game_descr': game[3]} for game in games_data]
    
  return render_template('games.html', games=games_data, page=page, total_pages=total_pages)
 
