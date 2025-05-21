@@ -103,7 +103,9 @@ def games():
 
     total_pages = (total_games + per_page - 1) // per_page
 
-    return render_template('games.html', games=games_data, page=page, total_pages=total_pages)
+games_list = [{'game_id': game[0], 'game_name': game[1], 'game_genre': game[2], 'game_descr': game[3]} for game in games_data]
+   
+ return render_template('games.html', games=games_data, page=page, total_pages=total_pages)
 
 
 @app.route('/users')
@@ -333,20 +335,13 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
-
 def get_db():
-    """
-    Функция для получения подключения к базе данных SQLite, сохранённой в g.
-    """
     if 'db' not in g:
-        try:
+        if 'DB_CONN' in app.config:
+            g.db = app.config['DB_CONN']
+        else:
             g.db = sqlite3.connect(app.config['DATABASE'])
-            g.db.row_factory = sqlite3.Row
-        except sqlite3.Error as e:
-            print(f"Database connection error: {e}")
-            g.db = None
     return g.db
-
 
 @app.teardown_appcontext
 def close_db(exception):
