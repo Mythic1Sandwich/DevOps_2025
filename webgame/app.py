@@ -7,7 +7,6 @@ app = Flask(__name__)
 application = app
 
 app.config['SECRET_KEY'] = '6342eb430febed6def4d4063a2fa717907fb4911143de1891c59dca9e0519bd8'
-
 app.config['DATABASE'] = r'gamemerch.db'
 
 login_manager = LoginManager()
@@ -103,9 +102,11 @@ def games():
 
     total_pages = (total_games + per_page - 1) // per_page
 
+
     games_list = [{'game_id': game[0], 'game_name': game[1], 'game_genre': game[2], 'game_descr': game[3]} for game in games_data]
-   
- return render_template('games.html', games=games_data, page=page, total_pages=total_pages)
+
+    return render_template('games.html', games=games_list, page=page, total_pages=total_pages)
+
 
 
 @app.route('/users')
@@ -122,45 +123,6 @@ def users():
         'role': current_user.role,
     }
     return render_template('users.html', user=user_info)
-
-@app.route('/change_password', methods=['GET', 'POST'])
-@login_required
-def change_password():
-    if request.method == 'POST':
-       
-        current_password = request.form.get('current_password', '')
-        new_password = request.form.get('new_password', '')
-        confirm_password = request.form.get('confirm_password', '')
-
-     
-        if new_password != confirm_password:
-            flash("Новый пароль и подтверждение пароля не совпадают!", category="danger")
-            return redirect(url_for('change_password'))
-
-        db = get_db()
-        cursor = db.cursor()
-        query = "SELECT password FROM users WHERE user_id = ?"
-        cursor.execute(query, (current_user.id,))
-        user_record = cursor.fetchone()
-        if not user_record:
-            flash("Пользователь не найден!", category="danger")
-            cursor.close()
-            return redirect(url_for('users'))
-        
-        if current_password != user_record['password']:
-            flash("Текущий пароль введён неверно!", category="danger")
-            cursor.close()
-            return redirect(url_for('change_password'))
-
-        update_query = "UPDATE users SET password = ? WHERE user_id = ?"
-        cursor.execute(update_query, (new_password, current_user.id))
-        db.commit()
-        cursor.close()
-
-        flash("Пароль успешно изменён!", category="success")
-        return redirect(url_for('users'))
-
-    return render_template('change_password.html')
 
 
 @app.route('/create_game', methods=["GET", "POST"])
@@ -335,6 +297,7 @@ def logout():
     logout_user()
     return redirect(url_for("index"))
 
+
 def get_db():
     if 'db' not in g:
         if 'DB_CONN' in app.config:
@@ -342,6 +305,7 @@ def get_db():
         else:
             g.db = sqlite3.connect(app.config['DATABASE'])
     return g.db
+
 
 @app.teardown_appcontext
 def close_db(exception):
